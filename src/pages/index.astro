@@ -17,6 +17,10 @@ const facebook = 'facebook' in profile ? profile.facebook : '';
 const linkedin = 'linkedin' in profile ? profile.linkedin : '';
 const telegram = 'telegram' in profile ? profile.telegram : '';
 const cvFile = 'cvFile' in profile ? profile.cvFile : '';
+const phone = 'phone' in profile ? String(profile.phone || '').trim() : '';
+const viber = 'viber' in profile ? String(profile.viber || '').trim() : '';
+const cleanPhone = phone.replace(/[^\d+]/g, '');
+const cleanViber = viber.replace(/[^\d+]/g, '');
 ---
 
 <Base title={profile.pageTitle}>
@@ -272,6 +276,18 @@ const cvFile = 'cvFile' in profile ? profile.cvFile : '';
       </div>
 
       <div class="social-links">
+        {cleanPhone && (
+          <a href={`tel:${cleanPhone}`} aria-label={`Call ${phone}`}>
+            📞 Call Me
+          </a>
+        )}
+
+        {cleanViber && (
+          <a href={`viber://chat?number=${encodeURIComponent(cleanViber)}`} aria-label={`Contact on Viber ${viber}`}>
+            💬 Viber
+          </a>
+        )}
+
         {facebook && (
           <a
             href={facebook}
