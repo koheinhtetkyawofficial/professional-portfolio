@@ -1,3 +1,4 @@
+
 ---
 import profile from '../data/profile.json';
 
@@ -15,10 +16,12 @@ const currentYear = new Date().getFullYear();
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1"
     />
+
     <meta name="description" content={description} />
 
     <title>{title}</title>
@@ -27,11 +30,13 @@ const currentYear = new Date().getFullYear();
       rel="preconnect"
       href="https://fonts.googleapis.com"
     />
+
     <link
       rel="preconnect"
       href="https://fonts.gstatic.com"
       crossorigin
     />
+
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap"
       rel="stylesheet"
@@ -43,11 +48,19 @@ const currentYear = new Date().getFullYear();
     <!-- HEADER -->
     <header class="nav">
 
-      <a class="brand" href="/" aria-label={`${siteName} homepage`}>
+      <a
+        class="brand"
+        href="/"
+        aria-label={`${siteName} homepage`}
+      >
         {siteName}<span>.</span>
       </a>
 
-      <nav aria-label="Main navigation">
+      <!-- DESKTOP NAVIGATION -->
+      <nav
+        class="desktop-nav"
+        aria-label="Main navigation"
+      >
         <a href="/#about">About</a>
         <a href="/#experience">Experience</a>
         <a href="/#portfolio">Portfolio</a>
@@ -58,6 +71,22 @@ const currentYear = new Date().getFullYear();
       <a class="nav-cta" href="/#contact">
         Let's Talk ↗
       </a>
+
+      <!-- MOBILE NAVIGATION -->
+      <details class="mobile-menu">
+        <summary aria-label="Toggle navigation menu">
+          <span class="menu-open-icon" aria-hidden="true">☰</span>
+          <span class="menu-close-icon" aria-hidden="true">✕</span>
+        </summary>
+
+        <nav aria-label="Mobile navigation">
+          <a href="/#about">About</a>
+          <a href="/#experience">Experience</a>
+          <a href="/#portfolio">Portfolio</a>
+          <a href="/#services">Services</a>
+          <a href="/#contact">Contact</a>
+        </nav>
+      </details>
 
     </header>
 
@@ -77,6 +106,38 @@ const currentYear = new Date().getFullYear();
       </span>
     </footer>
 
+    <script>
+      const mobileMenu = document.querySelector<HTMLDetailsElement>(
+        '.mobile-menu'
+      );
+
+      if (mobileMenu) {
+        const menuLinks = mobileMenu.querySelectorAll('nav a');
+
+        menuLinks.forEach((link) => {
+          link.addEventListener('click', () => {
+            mobileMenu.open = false;
+          });
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            mobileMenu.open = false;
+          }
+        });
+
+        document.addEventListener('click', (event) => {
+          if (
+            mobileMenu.open &&
+            event.target instanceof Node &&
+            !mobileMenu.contains(event.target)
+          ) {
+            mobileMenu.open = false;
+          }
+        });
+      }
+    </script>
+
   </body>
 </html>
 
@@ -94,6 +155,7 @@ const currentYear = new Date().getFullYear();
 
   body {
     margin: 0;
+    min-width: 320px;
   }
 
   a {
@@ -124,11 +186,14 @@ const currentYear = new Date().getFullYear();
     align-items: center;
     justify-content: space-between;
     gap: 24px;
+    position: relative;
+    z-index: 100;
   }
 
   .brand {
     font-weight: 700;
     letter-spacing: 2px;
+    overflow-wrap: anywhere;
   }
 
   .brand span,
@@ -137,11 +202,20 @@ const currentYear = new Date().getFullYear();
     color: #d7b678;
   }
 
-  .nav nav {
+  .desktop-nav {
     display: flex;
+    align-items: center;
     gap: 22px;
     font-size: 13px;
     color: #b7c2d0;
+  }
+
+  .desktop-nav a {
+    transition: color 0.2s ease;
+  }
+
+  .desktop-nav a:hover {
+    color: #d7b678;
   }
 
   .nav-cta {
@@ -149,6 +223,86 @@ const currentYear = new Date().getFullYear();
     padding: 12px 20px;
     font-size: 13px;
     border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .nav-cta:hover {
+    background: #d7b678;
+    color: #09121f;
+  }
+
+  /* MOBILE MENU - HIDDEN ON DESKTOP */
+
+  .mobile-menu {
+    display: none;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mobile-menu summary {
+    list-style: none;
+    cursor: pointer;
+    color: #d7b678;
+    border: 1px solid #526075;
+    border-radius: 5px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    user-select: none;
+  }
+
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-menu summary:focus-visible {
+    outline: 2px solid #d7b678;
+    outline-offset: 3px;
+  }
+
+  .menu-close-icon {
+    display: none;
+  }
+
+  .mobile-menu[open] .menu-open-icon {
+    display: none;
+  }
+
+  .mobile-menu[open] .menu-close-icon {
+    display: inline;
+  }
+
+  .mobile-menu nav {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 12px);
+    width: min(280px, calc(100vw - 40px));
+    background: #111f30;
+    border: 1px solid #526075;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    z-index: 200;
+  }
+
+  .mobile-menu nav a {
+    display: block;
+    padding: 13px 14px;
+    border-radius: 5px;
+    color: #edf1f4;
+    font-size: 14px;
+  }
+
+  .mobile-menu nav a:hover,
+  .mobile-menu nav a:focus-visible {
+    background: #1b3047;
+    color: #d7b678;
   }
 
   /* CONTAINERS */
@@ -249,8 +403,31 @@ const currentYear = new Date().getFullYear();
   /* MOBILE RESPONSIVE */
 
   @media (max-width: 800px) {
-    .nav nav {
+    .desktop-nav {
       display: none;
+    }
+
+    .nav-cta {
+      display: none;
+    }
+
+    .mobile-menu {
+      display: block;
+      margin-left: auto;
+    }
+
+    .nav {
+      padding: 20px;
+      gap: 12px;
+    }
+
+    .brand {
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      padding: 0 20px;
     }
 
     .grid {
@@ -264,13 +441,20 @@ const currentYear = new Date().getFullYear();
     footer {
       flex-direction: column;
     }
+  }
 
+  @media (max-width: 480px) {
     .nav {
-      padding: 20px;
+      padding: 16px 20px;
     }
 
-    .container {
-      padding: 0 20px;
+    .brand {
+      font-size: 13px;
+    }
+
+    .mobile-menu summary {
+      width: 42px;
+      height: 42px;
     }
   }
 </style>
