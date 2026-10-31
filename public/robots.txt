@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://professional-portfolio-3lc.pages.dev/sitemap.xml
