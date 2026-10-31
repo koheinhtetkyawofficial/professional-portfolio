@@ -12,6 +12,11 @@ const services = (await getCollection('services'))
   .sort((a, b) => a.data.order - b.data.order);
 
 const profilePhoto = profile.profilePhoto || '';
+
+const facebook = 'facebook' in profile ? profile.facebook : '';
+const linkedin = 'linkedin' in profile ? profile.linkedin : '';
+const telegram = 'telegram' in profile ? profile.telegram : '';
+const cvFile = 'cvFile' in profile ? profile.cvFile : '';
 ---
 
 <Base title={profile.pageTitle}>
@@ -20,15 +25,21 @@ const profilePhoto = profile.profilePhoto || '';
   <section class="hero">
     <div class="container hero-inner">
 
+      <!-- LEFT SIDE -->
       <div class="hero-content">
-        <div class="eyebrow">{profile.eyebrow}</div>
+
+        <div class="eyebrow">
+          {profile.eyebrow}
+        </div>
 
         <h1>
           {profile.heroTitle}
           <em>{profile.heroHighlight}</em>
         </h1>
 
-        <p class="lead">{profile.heroDescription}</p>
+        <p class="lead">
+          {profile.heroDescription}
+        </p>
 
         <div class="actions">
           <a class="button" href="#portfolio">
@@ -45,14 +56,11 @@ const profilePhoto = profile.profilePhoto || '';
           <span>SALES STRATEGY</span>
           <span>DIGITAL MARKETING</span>
         </div>
+
       </div>
 
-      <!-- PROFILE PHOTO PANEL -->
+      <!-- RIGHT SIDE: PHOTO + NAME -->
       <div class="hero-panel">
-
-        <div class="panel-top">
-          THE PROFESSIONAL PROFILE
-        </div>
 
         <div class="panel-mark">
           {profilePhoto ? (
@@ -70,13 +78,13 @@ const profilePhoto = profile.profilePhoto || '';
           )}
         </div>
 
-        <div class="panel-bottom">
-          Hospitality<br />
-          Business<br />
-          Digital
+        <div class="profile-name">
+          <h2>{profile.name}</h2>
+          <p>Hospitality · Business · Digital</p>
         </div>
 
       </div>
+
     </div>
   </section>
 
@@ -97,7 +105,6 @@ const profilePhoto = profile.profilePhoto || '';
 
       <div>
         <p>{profile.aboutText}</p>
-
         <p class="muted">{profile.aboutNote}</p>
 
         <div class="pills">
@@ -117,10 +124,11 @@ const profilePhoto = profile.profilePhoto || '';
     <div class="container">
 
       <div class="eyebrow">02 / CAREER</div>
-
       <h2>Professional Experience</h2>
 
-      <p>My career journey and areas of responsibility.</p>
+      <p>
+        My career journey and areas of responsibility.
+      </p>
 
       <div class="stack">
         {experience.map((e) => (
@@ -154,7 +162,9 @@ const profilePhoto = profile.profilePhoto || '';
   <section class="section" id="portfolio">
     <div class="container">
 
-      <div class="eyebrow">03 / SELECTED WORK</div>
+      <div class="eyebrow">
+        03 / SELECTED WORK
+      </div>
 
       <h2>Portfolio & Case Studies</h2>
 
@@ -187,7 +197,6 @@ const profilePhoto = profile.profilePhoto || '';
             </span>
 
             <h3>{p.data.title} ↗</h3>
-
             <p>{p.data.summary}</p>
 
           </a>
@@ -201,7 +210,9 @@ const profilePhoto = profile.profilePhoto || '';
   <section class="section" id="services">
     <div class="container">
 
-      <div class="eyebrow">04 / WHAT I OFFER</div>
+      <div class="eyebrow">
+        04 / WHAT I OFFER
+      </div>
 
       <h2>Services & Expertise</h2>
 
@@ -214,7 +225,6 @@ const profilePhoto = profile.profilePhoto || '';
             </span>
 
             <h3>{s.data.title}</h3>
-
             <p>{s.data.summary}</p>
 
           </article>
@@ -228,7 +238,9 @@ const profilePhoto = profile.profilePhoto || '';
   <section class="section" id="contact">
     <div class="container contact">
 
-      <div class="eyebrow">05 / GET IN TOUCH</div>
+      <div class="eyebrow">
+        05 / GET IN TOUCH
+      </div>
 
       <h2>
         Let's build something<br />
@@ -239,12 +251,57 @@ const profilePhoto = profile.profilePhoto || '';
 
       <p>{profile.contactText}</p>
 
-      <a
-        class="button"
-        href={`mailto:${profile.email}`}
-      >
-        Email Me ↗
-      </a>
+      <div class="contact-actions">
+        <a
+          class="button"
+          href={`mailto:${profile.email}`}
+        >
+          Email Me ↗
+        </a>
+
+        {cvFile && (
+          <a
+            class="button secondary"
+            href={cvFile}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download CV ↓
+          </a>
+        )}
+      </div>
+
+      <div class="social-links">
+        {facebook && (
+          <a
+            href={facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Facebook ↗
+          </a>
+        )}
+
+        {linkedin && (
+          <a
+            href={linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            LinkedIn ↗
+          </a>
+        )}
+
+        {telegram && (
+          <a
+            href={telegram}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Telegram ↗
+          </a>
+        )}
+      </div>
 
     </div>
   </section>
@@ -267,11 +324,15 @@ const profilePhoto = profile.profilePhoto || '';
 
   .hero-inner {
     display: grid;
-    grid-template-columns: 1.35fr 0.65fr;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
     gap: 60px;
     align-items: center;
     padding-top: 70px;
     padding-bottom: 100px;
+  }
+
+  .hero-content {
+    min-width: 0;
   }
 
   .hero h1 {
@@ -283,6 +344,7 @@ const profilePhoto = profile.profilePhoto || '';
   }
 
   .hero h1 em {
+    display: block;
     color: #d7b678;
     font-weight: 500;
   }
@@ -305,44 +367,37 @@ const profilePhoto = profile.profilePhoto || '';
     color: #8293a6;
   }
 
-  /* PROFILE PANEL */
+  /* RIGHT PROFILE PANEL */
 
   .hero-panel {
-    height: 410px;
     min-width: 0;
+    min-height: 410px;
     border: 1px solid #5a5d57;
     background: linear-gradient(
       135deg,
       #1a2a3c,
       #101923
     );
-    padding: 30px;
+    padding: 30px 24px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
     box-shadow: 20px 25px 0 #111e2d;
-    overflow: hidden;
-  }
-
-  .panel-top {
-    letter-spacing: 3px;
-    color: #b9aa86;
-    font-size: 10px;
   }
 
   .panel-mark {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 0;
-    flex: 1;
-    padding: 12px 0;
   }
 
   .fallback-mark {
     font-family: Georgia, serif;
     font-size: 64px;
-    text-align: center;
   }
 
   .fallback-mark span {
@@ -354,26 +409,36 @@ const profilePhoto = profile.profilePhoto || '';
   .profile-photo {
     display: block;
     width: 100%;
-    height: 250px;
-    max-width: 280px;
+    max-width: 260px;
+    height: 260px;
     object-fit: cover;
     object-position: center top;
-    border-radius: 8px;
-    border: 1px solid rgba(
-      215, 182, 120, 0.45
-    );
-    box-shadow: 0 10px 30px rgba(
-      0, 0, 0, 0.25
-    );
+    border-radius: 10px;
+    border: 2px solid #d7b678;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   }
 
-  .panel-bottom {
-    text-align: right;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-size: 12px;
-    line-height: 2;
-    color: #b4c0cc;
+  /* PROFILE NAME */
+
+  .profile-name {
+    width: 100%;
+  }
+
+  .profile-name h2 {
+    color: #ffffff;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 2.3vw, 26px);
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    margin: 0 0 8px;
+  }
+
+  .profile-name p {
+    color: #d7b678;
+    font-size: 11px;
+    letter-spacing: 1px;
+    line-height: 1.6;
+    margin: 0;
   }
 
   /* ABOUT */
@@ -448,52 +513,74 @@ const profilePhoto = profile.profilePhoto || '';
     margin: 0 auto 30px;
   }
 
-  .tiny {
-    font-size: 12px;
-    margin-top: 18px !important;
+  .contact-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
   }
 
-  /* MOBILE RESPONSIVE */
+  .contact-actions .button {
+    margin-right: 0;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .social-links a {
+    border: 1px solid #d7b678;
+    border-radius: 5px;
+    padding: 12px 20px;
+    color: #d7b678;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .social-links a:hover {
+    background: #d7b678;
+    color: #09121f;
+  }
+
+  /* TABLET & MOBILE */
 
   @media (max-width: 800px) {
-
     .hero-inner,
     .split {
       grid-template-columns: 1fr;
     }
 
     .hero-inner {
-      gap: 25px;
-    }
-
-    .hero-panel {
-      height: 280px;
-      padding: 18px;
-      box-shadow: none;
-    }
-
-    .panel-mark {
-      padding: 6px 0;
-    }
-
-    .profile-photo {
-      width: 100%;
-      height: 155px;
-      max-width: 190px;
-      object-position: center top;
-    }
-
-    .fallback-mark {
-      font-size: 40px;
-    }
-
-    .panel-bottom {
-      font-size: 10px;
-      line-height: 1.5;
+      gap: 35px;
+      padding-top: 55px;
+      padding-bottom: 70px;
     }
 
     .hero h1 {
+      font-size: clamp(42px, 10vw, 68px);
       letter-spacing: -1px;
+    }
+
+    .hero-panel {
+      min-height: 340px;
+      padding: 24px;
+      gap: 16px;
+      box-shadow: none;
+    }
+
+    .profile-photo {
+      max-width: 220px;
+      height: 220px;
+    }
+
+    .profile-name h2 {
+      font-size: 23px;
     }
 
     .experience {
@@ -506,6 +593,30 @@ const profilePhoto = profile.profilePhoto || '';
 
     .actions .button {
       margin-bottom: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-panel {
+      min-height: 320px;
+      padding: 20px;
+    }
+
+    .profile-photo {
+      max-width: 200px;
+      height: 200px;
+    }
+
+    .profile-name h2 {
+      font-size: 21px;
+    }
+
+    .profile-name p {
+      font-size: 10px;
+    }
+
+    .contact-actions {
+      gap: 10px;
     }
   }
 </style>
