@@ -73,5 +73,7 @@ collections:
           - {label: About Note, name: aboutNote, widget: text}
           - {label: Email Address, name: email, widget: string}
           - {label: Contact Description, name: contactText, widget: text}
+          - {label: Profile Photo, name: profilePhoto, widget: image, required: false}
+
 
 
