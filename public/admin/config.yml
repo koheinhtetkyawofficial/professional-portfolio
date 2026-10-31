@@ -53,4 +53,25 @@ collections:
       - {label: Summary, name: summary, widget: text}
       - {label: Display Order, name: order, widget: number, default: 0, value_type: int}
       - {label: Details, name: body, widget: markdown}
+      
+  - name: settings
+    label: Website Settings
+    files:
+      - name: profile
+        label: Personal Profile
+        file: src/data/profile.json
+        fields:
+          - {label: Your Name, name: name, widget: string}
+          - {label: Browser Page Title, name: pageTitle, widget: string}
+          - {label: Hero Eyebrow, name: eyebrow, widget: string}
+          - {label: Hero Heading, name: heroTitle, widget: string}
+          - {label: Hero Highlight, name: heroHighlight, widget: string}
+          - {label: Hero Description, name: heroDescription, widget: text}
+          - {label: About Heading, name: aboutTitle, widget: string}
+          - {label: About Highlight, name: aboutHighlight, widget: string}
+          - {label: About Me, name: aboutText, widget: text}
+          - {label: About Note, name: aboutNote, widget: text}
+          - {label: Email Address, name: email, widget: string}
+          - {label: Contact Description, name: contactText, widget: text}
+
 
