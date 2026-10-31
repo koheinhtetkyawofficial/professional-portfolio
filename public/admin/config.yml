@@ -77,7 +77,10 @@ collections:
           - {label: Facebook URL, name: facebook, widget: string, required: false}
           - {label: LinkedIn URL, name: linkedin, widget: string, required: false}
           - {label: Telegram URL, name: telegram, widget: string, required: false}
-          - {label: CV PDF, name: cvFile, widget: file, required: false, media_folder: /public/uploads/cv, public_folder: /uploads/cv}
+          - {label: CV PDF, name: cvFile, widget: file, required: false, media_folder: /public/uploads/cv, public_folder: /uploads/cv}          
+          - {label: Phone Number, name: phone, widget: string, required: false}
+          - {label: Viber Number, name: viber, widget: string, required: false}
+
 
 
 
