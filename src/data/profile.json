@@ -1,5 +1,7 @@
 {
+  "telegram": "",
   "heroDescription": "A versatile professional bringing together Food & Beverage Operations, Sales & Marketing, and Digital Marketing to create meaningful business impact.",
+  "facebook": "",
   "aboutHighlight": "Multiple perspectives.",
   "pageTitle": "Hein Htet Kyaw | Hospitality, Sales & Digital Marketing",
   "profilePhoto": "/uploads/photo_2026-06-18_15-38-33.jpg",
@@ -7,15 +9,13 @@
   "name": "Hein Htet Kyaw",
   "aboutTitle": "One professional.",
   "contactText": "Open to relevant career opportunities, professional connections and freelance collaborations.",
+  "phone": "+959966771516",
+  "cvFile": "",
   "heroHighlight": "Growth.",
   "aboutText": "I work across hospitality operations, commercial strategy, and digital marketing. This portfolio brings together my professional experience, selected projects and the services I can offer.",
+  "viber": "+959966771516",
   "email": "hello@example.com",
-  "heroTitle": "Welcome to My Portfolio",
-  "aboutNote": "Replace this introduction with your verified background, strengths and career goals.",
-  "facebook": "",
   "linkedin": "",
-  "telegram": "",
-  "phone": "",
-  "viber": "",
-  "cvFile": ""
+  "heroTitle": "Welcome to My Portfolio",
+  "aboutNote": "Replace this introduction with your verified background, strengths and career goals."
 }
