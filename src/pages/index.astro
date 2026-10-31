@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import {getCollection} from 'astro:content';
+import profile from '../data/profile.json';
 const projects=await getCollection('projects');
 const experience=(await getCollection('experience')).sort((a,b)=>a.data.order-b.data.order);
 const services=(await getCollection('services')).sort((a,b)=>a.data.order-b.data.order);
