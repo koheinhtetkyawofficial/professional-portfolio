@@ -74,6 +74,11 @@ collections:
           - {label: Email Address, name: email, widget: string}
           - {label: Contact Description, name: contactText, widget: text}
           - {label: Profile Photo, name: profilePhoto, widget: image, required: false}
+          - {label: Facebook URL, name: facebook, widget: string, required: false}
+          - {label: LinkedIn URL, name: linkedin, widget: string, required: false}
+          - {label: Telegram URL, name: telegram, widget: string, required: false}
+          - {label: CV PDF, name: cvFile, widget: file, required: false, media_folder: /public/uploads/cv, public_folder: /uploads/cv}
+
 
 
 
