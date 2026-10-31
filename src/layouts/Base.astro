@@ -1,48 +1,75 @@
-
 ---
 import profile from '../data/profile.json';
 
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
 const {
-  title = profile.pageTitle || 'Professional Portfolio',
-  description = profile.heroDescription ||
-    'F&B Operations, Sales & Marketing and Digital Marketing professional portfolio'
+  title = profile.pageTitle || 'Hein Htet Kyaw | Professional Portfolio',
+  description = profile.heroDescription || 'Explore the professional portfolio of Hein Htet Kyaw, featuring hospitality operations, sales and marketing, digital marketing, and selected projects.',
+  image = profile.profilePhoto || ''
 } = Astro.props;
 
-const siteName = profile.name || 'Your Name';
+const siteName = profile.name || 'Hein Htet Kyaw';
 const currentYear = new Date().getFullYear();
+const siteOrigin = 'https://professional-portfolio-3lc.pages.dev';
+const canonicalUrl = new URL(Astro.url.pathname, siteOrigin).toString();
+const socialImage = image ? new URL(image, siteOrigin).toString() : undefined;
+
+const socialLinks = [
+  'facebook' in profile ? profile.facebook : '',
+  'linkedin' in profile ? profile.linkedin : '',
+  'telegram' in profile ? profile.telegram : ''
+].filter((url): url is string => typeof url === 'string' && /^https?:\/\//i.test(url));
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: siteName,
+  url: siteOrigin + '/',
+  description,
+  ...(socialImage ? { image: socialImage } : {}),
+  ...(socialLinks.length ? { sameAs: socialLinks } : {})
+};
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1"
-    />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-<meta
-  name="google-site-verification"
-  content="7DszBxBwnYw12H3t1mbDYTVVPnh5wm7_Egc-t5RCru8"
-/>
-
-
+    <meta name="robots" content="index, follow" />
+    <meta
+      name="google-site-verification"
+      content="7DszBxBwnYw12H3t1mbDYTVVPnh5wm7_Egc-t5RCru8"
+    />
 
     <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
 
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={`${siteName} | Professional Portfolio`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    {socialImage && <meta property="og:image:alt" content={`${siteName} profile photo`} />}
 
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
 
+    {Astro.url.pathname === '/' && (
+      <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    )}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap"
       rel="stylesheet"
@@ -50,23 +77,14 @@ const currentYear = new Date().getFullYear();
   </head>
 
   <body>
-
     <!-- HEADER -->
     <header class="nav">
-
-      <a
-        class="brand"
-        href="/"
-        aria-label={`${siteName} homepage`}
-      >
+      <a class="brand" href="/" aria-label={`${siteName} homepage`}>
         {siteName}<span>.</span>
       </a>
 
       <!-- DESKTOP NAVIGATION -->
-      <nav
-        class="desktop-nav"
-        aria-label="Main navigation"
-      >
+      <nav class="desktop-nav" aria-label="Main navigation">
         <a href="/#about">About</a>
         <a href="/#experience">Experience</a>
         <a href="/#portfolio">Portfolio</a>
@@ -74,9 +92,7 @@ const currentYear = new Date().getFullYear();
         <a href="/#contact">Contact</a>
       </nav>
 
-      <a class="nav-cta" href="/#contact">
-        Let's Talk ↗
-      </a>
+      <a class="nav-cta" href="/#contact">Let's Talk ↗</a>
 
       <!-- MOBILE NAVIGATION -->
       <details class="mobile-menu">
@@ -84,7 +100,6 @@ const currentYear = new Date().getFullYear();
           <span class="menu-open-icon" aria-hidden="true">☰</span>
           <span class="menu-close-icon" aria-hidden="true">✕</span>
         </summary>
-
         <nav aria-label="Mobile navigation">
           <a href="/#about">About</a>
           <a href="/#experience">Experience</a>
@@ -93,57 +108,34 @@ const currentYear = new Date().getFullYear();
           <a href="/#contact">Contact</a>
         </nav>
       </details>
-
     </header>
 
     <!-- MAIN CONTENT -->
-    <main>
-      <slot />
-    </main>
+    <main><slot /></main>
 
     <!-- FOOTER -->
     <footer>
-      <span>
-        © {currentYear} {siteName} · Professional Portfolio
-      </span>
-
-      <span>
-        Built with Astro · Hosted on Cloudflare Pages
-      </span>
+      <span>© {currentYear} {siteName} · Professional Portfolio</span>
+      <span>Built with Astro · Hosted on Cloudflare Pages</span>
     </footer>
 
     <script>
-      const mobileMenu = document.querySelector<HTMLDetailsElement>(
-        '.mobile-menu'
-      );
-
+      const mobileMenu = document.querySelector<HTMLDetailsElement>('.mobile-menu');
       if (mobileMenu) {
         const menuLinks = mobileMenu.querySelectorAll('nav a');
-
         menuLinks.forEach((link) => {
-          link.addEventListener('click', () => {
-            mobileMenu.open = false;
-          });
+          link.addEventListener('click', () => { mobileMenu.open = false; });
         });
-
         document.addEventListener('keydown', (event) => {
-          if (event.key === 'Escape') {
-            mobileMenu.open = false;
-          }
+          if (event.key === 'Escape') mobileMenu.open = false;
         });
-
         document.addEventListener('click', (event) => {
-          if (
-            mobileMenu.open &&
-            event.target instanceof Node &&
-            !mobileMenu.contains(event.target)
-          ) {
+          if (mobileMenu.open && event.target instanceof Node && !mobileMenu.contains(event.target)) {
             mobileMenu.open = false;
           }
         });
       }
     </script>
-
   </body>
 </html>
 
@@ -154,36 +146,14 @@ const currentYear = new Date().getFullYear();
     color: #edf1f4;
     scroll-behavior: smooth;
   }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    min-width: 320px;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  h1, h2, h3, p {
-    margin-top: 0;
-  }
-
-  h1, h2 {
-    font-family: 'Playfair Display', serif;
-  }
-
-  p {
-    line-height: 1.75;
-    color: #abb8c9;
-  }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-width: 320px; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, p { margin-top: 0; }
+  h1, h2 { font-family: 'Playfair Display', serif; }
+  p { line-height: 1.75; color: #abb8c9; }
 
   /* NAVIGATION */
-
   .nav {
     max-width: 1200px;
     margin: auto;
@@ -195,19 +165,8 @@ const currentYear = new Date().getFullYear();
     position: relative;
     z-index: 100;
   }
-
-  .brand {
-    font-weight: 700;
-    letter-spacing: 2px;
-    overflow-wrap: anywhere;
-  }
-
-  .brand span,
-  .eyebrow,
-  .gold {
-    color: #d7b678;
-  }
-
+  .brand { font-weight: 700; letter-spacing: 2px; overflow-wrap: anywhere; }
+  .brand span, .eyebrow, .gold { color: #d7b678; }
   .desktop-nav {
     display: flex;
     align-items: center;
@@ -215,15 +174,8 @@ const currentYear = new Date().getFullYear();
     font-size: 13px;
     color: #b7c2d0;
   }
-
-  .desktop-nav a {
-    transition: color 0.2s ease;
-  }
-
-  .desktop-nav a:hover {
-    color: #d7b678;
-  }
-
+  .desktop-nav a { transition: color 0.2s ease; }
+  .desktop-nav a:hover { color: #d7b678; }
   .nav-cta {
     border: 1px solid #bba16f;
     padding: 12px 20px;
@@ -231,20 +183,10 @@ const currentYear = new Date().getFullYear();
     border-radius: 3px;
     white-space: nowrap;
   }
-
-  .nav-cta:hover {
-    background: #d7b678;
-    color: #09121f;
-  }
+  .nav-cta:hover { background: #d7b678; color: #09121f; }
 
   /* MOBILE MENU - HIDDEN ON DESKTOP */
-
-  .mobile-menu {
-    display: none;
-    position: relative;
-    flex-shrink: 0;
-  }
-
+  .mobile-menu { display: none; position: relative; flex-shrink: 0; }
   .mobile-menu summary {
     list-style: none;
     cursor: pointer;
@@ -259,28 +201,11 @@ const currentYear = new Date().getFullYear();
     font-size: 24px;
     user-select: none;
   }
-
-  .mobile-menu summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .mobile-menu summary:focus-visible {
-    outline: 2px solid #d7b678;
-    outline-offset: 3px;
-  }
-
-  .menu-close-icon {
-    display: none;
-  }
-
-  .mobile-menu[open] .menu-open-icon {
-    display: none;
-  }
-
-  .mobile-menu[open] .menu-close-icon {
-    display: inline;
-  }
-
+  .mobile-menu summary::-webkit-details-marker { display: none; }
+  .mobile-menu summary:focus-visible { outline: 2px solid #d7b678; outline-offset: 3px; }
+  .menu-close-icon { display: none; }
+  .mobile-menu[open] .menu-open-icon { display: none; }
+  .mobile-menu[open] .menu-close-icon { display: inline; }
   .mobile-menu nav {
     position: absolute;
     right: 0;
@@ -296,7 +221,6 @@ const currentYear = new Date().getFullYear();
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
     z-index: 200;
   }
-
   .mobile-menu nav a {
     display: block;
     padding: 13px 14px;
@@ -304,48 +228,21 @@ const currentYear = new Date().getFullYear();
     color: #edf1f4;
     font-size: 14px;
   }
-
-  .mobile-menu nav a:hover,
-  .mobile-menu nav a:focus-visible {
+  .mobile-menu nav a:hover, .mobile-menu nav a:focus-visible {
     background: #1b3047;
     color: #d7b678;
   }
 
   /* CONTAINERS */
-
-  .container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 0 28px;
-  }
-
-  .eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-size: 11px;
-    font-weight: 700;
-  }
+  .container { max-width: 1200px; margin: auto; padding: 0 28px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 3px; font-size: 11px; font-weight: 700; }
 
   /* SECTIONS */
-
-  .section {
-    padding: 90px 0;
-    border-top: 1px solid #263448;
-  }
-
-  .section h2 {
-    font-size: clamp(32px, 5vw, 53px);
-    line-height: 1.17;
-  }
+  .section { padding: 90px 0; border-top: 1px solid #263448; }
+  .section h2 { font-size: clamp(32px, 5vw, 53px); line-height: 1.17; }
 
   /* GRID & CARDS */
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-  }
-
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   .card {
     background: #111f30;
     border: 1px solid #28384b;
@@ -353,13 +250,9 @@ const currentYear = new Date().getFullYear();
     padding: 27px;
     min-width: 0;
   }
-
-  .card h3 {
-    font-size: 20px;
-  }
+  .card h3 { font-size: 20px; }
 
   /* PILLS */
-
   .pill {
     display: inline-block;
     border: 1px solid #526075;
@@ -371,7 +264,6 @@ const currentYear = new Date().getFullYear();
   }
 
   /* BUTTONS */
-
   .button {
     display: inline-block;
     background: #d7b678;
@@ -381,19 +273,10 @@ const currentYear = new Date().getFullYear();
     border-radius: 3px;
     margin-right: 12px;
   }
-
-  .button.secondary {
-    background: transparent;
-    color: #fff;
-    border: 1px solid #7a899c;
-  }
-
-  .muted {
-    color: #9facbc;
-  }
+  .button.secondary { background: transparent; color: #fff; border: 1px solid #7a899c; }
+  .muted { color: #9facbc; }
 
   /* FOOTER */
-
   footer {
     max-width: 1200px;
     margin: auto;
@@ -407,60 +290,20 @@ const currentYear = new Date().getFullYear();
   }
 
   /* MOBILE RESPONSIVE */
-
   @media (max-width: 800px) {
-    .desktop-nav {
-      display: none;
-    }
-
-    .nav-cta {
-      display: none;
-    }
-
-    .mobile-menu {
-      display: block;
-      margin-left: auto;
-    }
-
-    .nav {
-      padding: 20px;
-      gap: 12px;
-    }
-
-    .brand {
-      font-size: 14px;
-      letter-spacing: 1px;
-    }
-
-    .container {
-      padding: 0 20px;
-    }
-
-    .grid {
-      grid-template-columns: 1fr;
-    }
-
-    .section {
-      padding: 65px 0;
-    }
-
-    footer {
-      flex-direction: column;
-    }
+    .desktop-nav { display: none; }
+    .nav-cta { display: none; }
+    .mobile-menu { display: block; margin-left: auto; }
+    .nav { padding: 20px; gap: 12px; }
+    .brand { font-size: 14px; letter-spacing: 1px; }
+    .container { padding: 0 20px; }
+    .grid { grid-template-columns: 1fr; }
+    .section { padding: 65px 0; }
+    footer { flex-direction: column; }
   }
-
   @media (max-width: 480px) {
-    .nav {
-      padding: 16px 20px;
-    }
-
-    .brand {
-      font-size: 13px;
-    }
-
-    .mobile-menu summary {
-      width: 42px;
-      height: 42px;
-    }
+    .nav { padding: 16px 20px; }
+    .brand { font-size: 13px; }
+    .mobile-menu summary { width: 42px; height: 42px; }
   }
 </style>
