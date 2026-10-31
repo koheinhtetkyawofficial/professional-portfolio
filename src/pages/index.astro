@@ -1,4 +1,3 @@
-
 ---
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
@@ -11,13 +10,17 @@ const experience = (await getCollection('experience'))
 
 const services = (await getCollection('services'))
   .sort((a, b) => a.data.order - b.data.order);
+
+const profilePhoto = profile.profilePhoto || '';
 ---
 
 <Base title={profile.pageTitle}>
+
   <!-- HERO SECTION -->
   <section class="hero">
     <div class="container hero-inner">
-      <div>
+
+      <div class="hero-content">
         <div class="eyebrow">{profile.eyebrow}</div>
 
         <h1>
@@ -31,6 +34,7 @@ const services = (await getCollection('services'))
           <a class="button" href="#portfolio">
             Explore My Work ↗
           </a>
+
           <a class="button secondary" href="#contact">
             Hire / Collaborate
           </a>
@@ -43,11 +47,27 @@ const services = (await getCollection('services'))
         </div>
       </div>
 
+      <!-- PROFILE PHOTO PANEL -->
       <div class="hero-panel">
-        <div class="panel-top">THE PROFESSIONAL PROFILE</div>
+
+        <div class="panel-top">
+          THE PROFESSIONAL PROFILE
+        </div>
 
         <div class="panel-mark">
-          H<span>·</span>B<span>·</span>D
+          {profilePhoto ? (
+            <img
+              src={profilePhoto}
+              alt={`${profile.name} - Profile Photo`}
+              class="profile-photo"
+              loading="eager"
+              decoding="async"
+            />
+          ) : (
+            <div class="fallback-mark">
+              H<span>·</span>B<span>·</span>D
+            </div>
+          )}
         </div>
 
         <div class="panel-bottom">
@@ -55,6 +75,7 @@ const services = (await getCollection('services'))
           Business<br />
           Digital
         </div>
+
       </div>
     </div>
   </section>
@@ -62,12 +83,15 @@ const services = (await getCollection('services'))
   <!-- ABOUT ME SECTION -->
   <section class="section" id="about">
     <div class="container split">
+
       <div>
         <div class="eyebrow">01 / ABOUT ME</div>
 
         <h2>
           {profile.aboutTitle}<br />
-          <span class="gold">{profile.aboutHighlight}</span>
+          <span class="gold">
+            {profile.aboutHighlight}
+          </span>
         </h2>
       </div>
 
@@ -84,12 +108,14 @@ const services = (await getCollection('services'))
           <span class="pill">Campaign Strategy</span>
         </div>
       </div>
+
     </div>
   </section>
 
   <!-- EXPERIENCE SECTION -->
   <section class="section" id="experience">
     <div class="container">
+
       <div class="eyebrow">02 / CAREER</div>
 
       <h2>Professional Experience</h2>
@@ -99,56 +125,82 @@ const services = (await getCollection('services'))
       <div class="stack">
         {experience.map((e) => (
           <article class="experience">
+
             <div>
-              <span class="eyebrow">{e.data.period}</span>
+              <span class="eyebrow">
+                {e.data.period}
+              </span>
+
               <h3>{e.data.title}</h3>
               <p>{e.data.company}</p>
             </div>
 
             <div>
-              <span class="pill">{e.data.category}</span>
+              <span class="pill">
+                {e.data.category}
+              </span>
+
               <p>{e.body.slice(0, 250)}</p>
             </div>
+
           </article>
         ))}
       </div>
+
     </div>
   </section>
 
   <!-- PORTFOLIO SECTION -->
   <section class="section" id="portfolio">
     <div class="container">
+
       <div class="eyebrow">03 / SELECTED WORK</div>
 
       <h2>Portfolio & Case Studies</h2>
 
-      <p>Projects are examples until replaced with verified work.</p>
+      <p>
+        Projects are examples until replaced
+        with verified work.
+      </p>
 
       <div class="grid">
         {projects.map((p) => (
-          <a class="card project" href={`/projects/${p.id}/`}>
+          <a
+            class="card project"
+            href={`/projects/${p.id}/`}
+          >
+
             <div class="project-art">
               {p.data.image ? (
-                <img src={p.data.image} alt={p.data.title} />
+                <img
+                  src={p.data.image}
+                  alt={p.data.title}
+                  loading="lazy"
+                />
               ) : (
                 <span>{p.data.category}</span>
               )}
             </div>
 
-            <span class="eyebrow">{p.data.category}</span>
+            <span class="eyebrow">
+              {p.data.category}
+            </span>
 
             <h3>{p.data.title} ↗</h3>
 
             <p>{p.data.summary}</p>
+
           </a>
         ))}
       </div>
+
     </div>
   </section>
 
   <!-- SERVICES SECTION -->
   <section class="section" id="services">
     <div class="container">
+
       <div class="eyebrow">04 / WHAT I OFFER</div>
 
       <h2>Services & Expertise</h2>
@@ -156,6 +208,7 @@ const services = (await getCollection('services'))
       <div class="grid">
         {services.map((s, i) => (
           <article class="card">
+
             <span class="eyebrow">
               {String(i + 1).padStart(2, '0')}
             </span>
@@ -163,32 +216,44 @@ const services = (await getCollection('services'))
             <h3>{s.data.title}</h3>
 
             <p>{s.data.summary}</p>
+
           </article>
         ))}
       </div>
+
     </div>
   </section>
 
   <!-- CONTACT SECTION -->
   <section class="section" id="contact">
     <div class="container contact">
+
       <div class="eyebrow">05 / GET IN TOUCH</div>
 
       <h2>
         Let's build something<br />
-        <span class="gold">meaningful together.</span>
+        <span class="gold">
+          meaningful together.
+        </span>
       </h2>
 
       <p>{profile.contactText}</p>
 
-      <a class="button" href={`mailto:${profile.email}`}>
+      <a
+        class="button"
+        href={`mailto:${profile.email}`}
+      >
         Email Me ↗
       </a>
+
     </div>
   </section>
+
 </Base>
 
 <style>
+  /* HERO */
+
   .hero {
     min-height: 650px;
     display: flex;
@@ -202,7 +267,7 @@ const services = (await getCollection('services'))
 
   .hero-inner {
     display: grid;
-    grid-template-columns: 1.35fr .65fr;
+    grid-template-columns: 1.35fr 0.65fr;
     gap: 60px;
     align-items: center;
     padding-top: 70px;
@@ -240,8 +305,11 @@ const services = (await getCollection('services'))
     color: #8293a6;
   }
 
+  /* PROFILE PANEL */
+
   .hero-panel {
     height: 410px;
+    min-width: 0;
     border: 1px solid #5a5d57;
     background: linear-gradient(
       135deg,
@@ -253,6 +321,7 @@ const services = (await getCollection('services'))
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 20px 25px 0 #111e2d;
+    overflow: hidden;
   }
 
   .panel-top {
@@ -262,13 +331,40 @@ const services = (await getCollection('services'))
   }
 
   .panel-mark {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+    flex: 1;
+    padding: 12px 0;
+  }
+
+  .fallback-mark {
     font-family: Georgia, serif;
     font-size: 64px;
     text-align: center;
   }
 
-  .panel-mark span {
+  .fallback-mark span {
     color: #d7b678;
+  }
+
+  /* PROFILE PHOTO */
+
+  .profile-photo {
+    display: block;
+    width: 100%;
+    height: 250px;
+    max-width: 280px;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 8px;
+    border: 1px solid rgba(
+      215, 182, 120, 0.45
+    );
+    box-shadow: 0 10px 30px rgba(
+      0, 0, 0, 0.25
+    );
   }
 
   .panel-bottom {
@@ -280,11 +376,15 @@ const services = (await getCollection('services'))
     color: #b4c0cc;
   }
 
+  /* ABOUT */
+
   .split {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 70px;
   }
+
+  /* EXPERIENCE */
 
   .experience {
     display: grid;
@@ -298,6 +398,8 @@ const services = (await getCollection('services'))
     font-size: 24px;
     margin: 12px 0;
   }
+
+  /* PROJECTS */
 
   .project {
     display: block;
@@ -335,6 +437,8 @@ const services = (await getCollection('services'))
     object-fit: cover;
   }
 
+  /* CONTACT */
+
   .contact {
     text-align: center;
   }
@@ -349,7 +453,10 @@ const services = (await getCollection('services'))
     margin-top: 18px !important;
   }
 
+  /* MOBILE RESPONSIVE */
+
   @media (max-width: 800px) {
+
     .hero-inner,
     .split {
       grid-template-columns: 1fr;
@@ -360,12 +467,29 @@ const services = (await getCollection('services'))
     }
 
     .hero-panel {
-      height: 230px;
+      height: 280px;
+      padding: 18px;
       box-shadow: none;
     }
 
     .panel-mark {
+      padding: 6px 0;
+    }
+
+    .profile-photo {
+      width: 100%;
+      height: 155px;
+      max-width: 190px;
+      object-position: center top;
+    }
+
+    .fallback-mark {
       font-size: 40px;
+    }
+
+    .panel-bottom {
+      font-size: 10px;
+      line-height: 1.5;
     }
 
     .hero h1 {
